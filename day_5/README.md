@@ -1,4 +1,4 @@
-# Day 4
+# Day 5
 
 Here's a checklist for this week's tasks:
 
@@ -88,7 +88,7 @@ Our next attempt looks like this:
 
 ```yml
 steps:
-  - uses: actions/checkout@v3 # <-- this line is new
+  - uses: actions/checkout@v4 # <-- this line is new
   - name: Ensure standard formatting
     run: cargo fmt --check
 ```
@@ -97,7 +97,7 @@ Commit and push this new workflow.
 This time, you should get actual output by `rustfmt`, telling you how to fix the formatting in `badlib`:
 
 ```
-Diff in /home/runner/work/rw-test/rw-test/day_4/badlib/src/lib.rs at line 5:
+Diff in /home/runner/work/rw-test/rw-test/day_5/badlib/src/lib.rs at line 5:
 // ... diff ...
 Error: Process completed with exit code 1.
 ```
@@ -179,7 +179,7 @@ Imagine no more, we're gonna do it right now.
 First, let's create a new application to ship to our users:
 
 ```sh
-cd rust-exercises/day_4
+cd rust-exercises/day_5
 cargo new shippable
 ```
 
@@ -214,7 +214,7 @@ Commit these changes and push them to enable the new workflow.
 Now, for the last part, we're just going to create a new release and watch what happens.
 
 Update the `version` key, e.g. to `0.1.1`, in the `Cargo.toml` of the binary you want to ship.
-(Consistent with the previous example, that would be `day_4/shippable`.)
+(Consistent with the previous example, that would be `day_5/shippable`.)
 Consider updating the `println!` statement as well, so you can be sure the correct version was built.
 Commit and push these changes.
 
@@ -230,7 +230,7 @@ Keep an eye on your GitHub Actions tab, the release workflow should be triggered
 Once it is done, you can find a new release on the front page of your GitHub repo.
 It should contain downloadable binaries for all common platforms.
 
-If that's not epic, I dont' know what is!
+How cool is that! 😎
 
 ## Homework
 
