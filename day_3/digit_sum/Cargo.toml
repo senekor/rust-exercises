@@ -1,5 +1,5 @@
 [package]
-name = "methods"
+name = "digit_sum"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,6 +8,3 @@ edition = "2021"
 [lints.rust]
 unexpected_cfgs = "allow"
 unused = "allow"
-
-[lints.clippy]
-use_self = "deny"

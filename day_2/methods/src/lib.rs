@@ -1,8 +1,5 @@
 //! Refactor the following program to use methods instead of plain functions.
 
-#![allow(unused)]
-#![deny(clippy::use_self)]
-
 struct Bee {
     nectar: u32,
 }
@@ -69,6 +66,6 @@ fn exercise_was_started() {
         ╭──────────────────────────────────────────────────────────────────────────╮
         │ remove the line starting with #[cfg(deactivated)] to activate the tests! │
         ╰──────────────────────────────────────────────────────────────────────────╯
-"
+        "
     )
 }

@@ -62,8 +62,6 @@ pub fn is_pangram(sentence: &str) -> bool {
 
 #[cfg(deactivated)] // remove this line to activate the tests
 mod tests {
-    #![allow(unused)]
-
     use std::collections::HashSet;
 
     use super::*;
@@ -148,6 +146,6 @@ fn exercise_was_started() {
         ╭──────────────────────────────────────────────────────────────────────────╮
         │ remove the line starting with #[cfg(deactivated)] to activate the tests! │
         ╰──────────────────────────────────────────────────────────────────────────╯
-"
+        "
     )
 }
