@@ -31,9 +31,9 @@ Here's a checklist for this week's tasks:
 
 ## Optional exercises
 
-Just like last week, I simply encourage you to solve more exercises if you're having fun.
+Just like for day 1, you are simply encouraged to solve more exercises if you're having fun.
 You should now know enough to solve basically any Advent of Code or Exercism exercise, so there's no explicit allow-list this time.
 The advanced features of Rust we'll learn next week can be used for more elegant & performant solutions, but shouldn't generally be necessary.
 Exercism has some advanced exercises that force you to use these advanced concepts, but if you solve the exercises in the natural order, you should be safe.
 
-I also encourage you again to submit your exercise solutions to your workshop organizer for feedback!
+Also, you are again encouraged to ask your workshop organizer for feedback on your exercise solutions.
