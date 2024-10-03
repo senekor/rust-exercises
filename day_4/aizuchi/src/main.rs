@@ -18,6 +18,12 @@ use std::time::Duration;
 
 async fn speaker(phone: Phone) {
     phone.say("So I was going to the mall...");
+    //
+    // TODO: The sleep function from the standard library blocks the current
+    // thread, preventing other async tasks from progressing. The tokio
+    // library, which provides our async runtime, can help:
+    // https://docs.rs/tokio/latest/tokio/time/fn.sleep.html
+    //
     std::thread::sleep(Duration::from_millis(2));
     phone.say("...where I met Susan by coincidence...");
     std::thread::sleep(Duration::from_millis(2));
