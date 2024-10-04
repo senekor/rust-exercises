@@ -21,6 +21,8 @@
 //! - You CANNOT assume elements are hashable or orderable.
 
 use std::{
+    any::Any,
+    borrow::Borrow,
     cell::RefCell,
     rc::{Rc, Weak},
 };
@@ -68,6 +70,13 @@ impl<T: Clone + Eq> Tracker<T> {
             nodes.push(node);
         }
     }
+    fn notify(&self, node: &Node<T>) {
+        let raw = RefCell::borrow(&node.0);
+        for neighbor in raw.neighbors.iter() {
+            let strong_neighbor = neighbor.upgrade();
+            let strong_count = Rc::strong_count(&strong_neighbor.0);
+        }
+    }
 }
 
 // We wrap the smart pointers for shared ownership and interior mutability
@@ -76,7 +85,15 @@ impl<T: Clone + Eq> Tracker<T> {
 pub struct Node<T: Clone + Eq>(Rc<RefCell<RawNode<T>>>);
 
 impl<T: Clone + Eq> Drop for Node<T> {
-    fn drop(&mut self) {}
+    fn drop(&mut self) {
+        let strong_count = Rc::strong_count(&self.0);
+        if strong_count == 2 {
+            // node is about to lose its last reference from the outside world.
+            // notify tracker to drop all newly unreachable nodes.
+            let tracker = self.tracker();
+            tracker.notify(self);
+        }
+    }
 }
 
 impl<T: Clone + Eq> Node<T> {
