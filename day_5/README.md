@@ -237,9 +237,6 @@ How cool is that! 😎
 - [ ] skim [blessed.rs](https://blessed.rs) from top to bottom.
       This will give you an overview of the highest-quaility and most important libraries available.
 
-## Optional exercises
+## Final Project
 
-You are again encouraged to keep going with Advent of Code and Exercism.
-Don't forget to request feedback on your solutions!
-
-If you are eagerly solving programming exercises in Rust and maybe you have those solutions in another repository, why not add CI to that repo as well?
+Once you're done with this week's practice tasks, you can get started with the [final project](https://senekor.github.io/paekli-rs)!
