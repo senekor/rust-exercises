@@ -54,10 +54,8 @@ Read until you are satisfied and make a mental note that these things exist.
 ## Optional exercises
 
 If you have time and enthusiasm to spare, you can solve some of these exercises.
-You are encouraged to ping your workshop organizer for a code review!
+You are encouraged to ask your workshop organizer for a code review!
 Feedback will focus on adding information, pointing out different ways of doing things and discussing trade-offs. (no nitpicking / perfectionism)
-Exercism has a built-in mentoring feature and GitHub PR reviews work well for both platforms.
-Choose whatever you prefer.
 
 These exercises were selected because you already learned about everything required to solve them.
 However, a performant and or elegant solution might still be out of reach!
