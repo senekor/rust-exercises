@@ -24,9 +24,10 @@ practicing the topic we covered today. There wasn't anything for drop, shared
 ownership and interior mutability, so I made a custom exercise.
 
 - `Box`: [Simple Linked List](https://exercism.org/tracks/rust/exercises/simple-linked-list)
-- drop, shared ownership, interior mutability: (custom) [apple counter](https://github.com/senekor/rust-exercises/day_4/apple_counter)
+- drop, shared ownership, interior mutability: (custom) [apple counter](https://github.com/senekor/rust-exercises/tree/main/day_4/apple_counter)
 - multi-threading: [Parallel Letter Frequency](https://exercism.org/tracks/rust/exercises/parallel-letter-frequency)
 - dynamic dispatch: (difficult!) [React](https://exercism.org/tracks/rust/exercises/react)
+- async: (custom) [aizuchi](https://github.com/senekor/rust-exercises/tree/main/day_4/aizuchi)
 
 ## Advent of Code
 
