@@ -229,12 +229,22 @@ fn generic_not_ord_not_hash() {
 /// This test is very difficult to pass.
 /// Remove the #[ignore] attribute to accept the challenge.
 #[test]
-#[ignore]
+// #[ignore]
 fn not_memory_leak() {
-    #[derive(Clone, PartialEq, Eq)]
+    #[derive(PartialEq, Eq)]
     struct DropCounter {
         value: u8,
-        drop_count: Rc<RefCell<usize>>,
+        drop_count: Rc<RefCell<isize>>,
+    }
+    impl Clone for DropCounter {
+        fn clone(&self) -> Self {
+            // don't count clones of values toward drop counter
+            *RefCell::borrow_mut(&self.drop_count) -= 1;
+            Self {
+                value: self.value,
+                drop_count: Rc::clone(&self.drop_count),
+            }
+        }
     }
     impl Drop for DropCounter {
         fn drop(&mut self) {

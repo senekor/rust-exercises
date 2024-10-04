@@ -31,7 +31,7 @@ struct RawNode<T: Clone + Eq> {
     /// different nodes with the same value are not considered equal.
     value: T,
     neighbors: Vec<WeakNode<T>>,
-    tracker: Rc<RefCell<Tracker<T>>>,
+    tracker: Tracker<T>,
 }
 impl<T: Clone + Eq> PartialEq for RawNode<T> {
     fn eq(&self, other: &Self) -> bool {
@@ -45,18 +45,28 @@ impl<T: Clone + Eq> RawNode<T> {
         Self {
             value,
             neighbors: Vec::new(),
-            tracker: Rc::new(RefCell::new(Tracker::default())),
+            tracker: Tracker::default(),
         }
     }
 }
 
 #[derive(Clone, PartialEq, Eq)]
 struct Tracker<T: Clone + Eq> {
-    nodes: Vec<Node<T>>,
+    nodes: Rc<RefCell<Vec<Node<T>>>>,
 }
 impl<T: Clone + Eq> Default for Tracker<T> {
     fn default() -> Self {
-        Self { nodes: Vec::new() }
+        Self {
+            nodes: Default::default(),
+        }
+    }
+}
+impl<T: Clone + Eq> Tracker<T> {
+    fn add(&self, node: Node<T>) {
+        let mut nodes = RefCell::borrow_mut(&self.nodes);
+        if !nodes.contains(&node) {
+            nodes.push(node);
+        }
     }
 }
 
@@ -65,9 +75,17 @@ impl<T: Clone + Eq> Default for Tracker<T> {
 #[derive(Clone, PartialEq, Eq)]
 pub struct Node<T: Clone + Eq>(Rc<RefCell<RawNode<T>>>);
 
+impl<T: Clone + Eq> Drop for Node<T> {
+    fn drop(&mut self) {}
+}
+
 impl<T: Clone + Eq> Node<T> {
     pub fn new(value: T) -> Self {
-        Self(Rc::new(RefCell::new(RawNode::new(value))))
+        let raw = RawNode::new(value);
+        let node = Self(Rc::new(RefCell::new(raw)));
+        let tracker = node.tracker();
+        tracker.add(node.clone());
+        node
     }
 
     /// returns the value stored in the node
@@ -89,12 +107,32 @@ impl<T: Clone + Eq> Node<T> {
 
     /// Our graph should be able to mutate internally.
     /// This method provides that capability.
+    ///
+    /// For the purposes of the Eq trait, you may assume the values of two
+    /// different nodes are never the same.
     pub fn update_value(&self, f: fn(T) -> T) {
         let value = self.value();
         RefCell::borrow_mut(&self.0).value = f(value);
     }
 
     pub fn add_neighbor(&self, neighbor: Self) {
+        {
+            // merge trackers
+            let self_tracker = self.tracker();
+            let other_tracker = neighbor.tracker();
+
+            if self_tracker != other_tracker {
+                let migrating_nodes = RefCell::borrow(&other_tracker.nodes);
+                let migrating_nodes = migrating_nodes.iter();
+
+                let mut nodes_to_update = RefCell::borrow_mut(&self_tracker.nodes);
+                nodes_to_update.extend(migrating_nodes.clone().cloned());
+
+                for n in migrating_nodes {
+                    RefCell::borrow_mut(&n.0).tracker = self_tracker.clone();
+                }
+            }
+        }
         let contains = |v: &[WeakNode<T>], neighbor| v.iter().any(|n| &n.upgrade() == neighbor);
         {
             let v = &mut RefCell::borrow_mut(&self.0).neighbors;
@@ -119,6 +157,10 @@ impl<T: Clone + Eq> Node<T> {
 
     fn downgrade(&self) -> WeakNode<T> {
         WeakNode(Rc::downgrade(&self.0))
+    }
+
+    fn tracker(&self) -> Tracker<T> {
+        RefCell::borrow(&self.0).tracker.clone()
     }
 }
 
