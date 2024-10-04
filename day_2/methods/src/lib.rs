@@ -1,7 +1,7 @@
 //! Refactor the following program to use methods instead of plain functions.
 
 #![allow(unused)]
-#![warn(clippy::use_self)]
+#![deny(clippy::use_self)]
 
 struct Bee {
     nectar: u32,
