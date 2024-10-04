@@ -19,6 +19,7 @@ Here's a checklist for this week's tasks:
   - [ ] run `cargo install rustlings`
   - [ ] in the root of your repo, run `rustlings init`
         This will create the `rustlings` folder containing all the exercises.
+        (If you want to check their initial state into version control, now's a good time.)
 - Solve rustlings exercises (run the command `rustlings` inside the `rustlings/` folder).
   - [ ] intro
   - [ ] variables
