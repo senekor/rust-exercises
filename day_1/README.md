@@ -70,7 +70,7 @@ Advent of Code on the other hand is more free-form problem solving.
 
 Make sure you finished the standard library reading, some of those items might come in handy 😉
 
-- [Exercism]
+- [Exercism] (setup recommendations in the [top-level readme](../README.md))
   - [Grains](https://exercism.org/tracks/rust/exercises/leap): bit fiddling
   - [Leap](https://exercism.org/tracks/rust/exercises/leap): boolean operators
   - [Prime Factors](https://exercism.org/tracks/rust/exercises/nth-prime): arithmetic, vectors
@@ -78,7 +78,7 @@ Make sure you finished the standard library reading, some of those items might c
   - [Matching Brackets](https://exercism.org/tracks/rust/exercises/matching-brackets): vectors, characters
   - [Sieve](https://exercism.org/tracks/rust/exercises/sieve) (of Eratosthenes): arithmetic, vectors
   - [Secret Handshake](https://exercism.org/tracks/rust/exercises/secret-handshake): bit fiddling, vectors
-- [Advent of Code]
+- [Advent of Code] (setup recommendations in the [top-level readme](../README.md))
   - [2015: day 1](https://adventofcode.com/2015/day/1)
   - [2015: day 2](https://adventofcode.com/2015/day/2)
   - [2017: day 1](https://adventofcode.com/2017/day/1)

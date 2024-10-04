@@ -15,8 +15,17 @@ Get started with [day_1/README.md](day_1/README.md).
 ## Practice resources
 
 - language & syntax basics: [rustlings]
-- Rust-specific exercises with provided test: [Exercism][exercism]
+- Rust-specific exercises with provided tests: [Exercism][exercism]\
+  Setup recommendation:
+  [Use the CLI to work locally](https://exercism.org/docs/using/solving-exercises/working-locally).
+  You can keep your solutions in this repo by configuring the workspace:
+  ```sh
+  exercism configure --workspace rust-exercises/exercism
+  ```
 - general programming exercises (text-in, text-out): [Advent of Code][advent-of-code]
+  Setup recommendation:
+  Simply run `cargo new` for each exercise and copy-paste the input data.
+  You can do it right in this repo for convenience, if you like. 
 
 ## Ecosystem Wegweiser
 
