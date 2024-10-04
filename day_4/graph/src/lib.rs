@@ -18,31 +18,52 @@
 //! - Elements must be comparable, so the tests can check if one graph
 //!   is the same as another.
 //!
-//! - You CANNOT assume elements are hashable or comparable.
+//! - You CANNOT assume elements are hashable or orderable.
 
-use std::{cell::RefCell, rc::Rc};
+use std::{
+    cell::RefCell,
+    rc::{Rc, Weak},
+};
 
-#[derive(Clone, PartialEq, Eq, PartialOrd)]
-struct RawNode<T> {
+#[derive(Clone)]
+struct RawNode<T: Clone + Eq> {
     /// This id is never changed, it only serves the purpose of making sure two
     /// different nodes with the same value are not considered equal.
     value: T,
-    neighbors: Vec<Node<T>>,
+    neighbors: Vec<WeakNode<T>>,
+    tracker: Rc<RefCell<Tracker<T>>>,
 }
+impl<T: Clone + Eq> PartialEq for RawNode<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.value.eq(&other.value)
+    }
+}
+impl<T: Clone + Eq> Eq for RawNode<T> {}
 
-impl<T> RawNode<T> {
+impl<T: Clone + Eq> RawNode<T> {
     fn new(value: T) -> Self {
         Self {
             value,
             neighbors: Vec::new(),
+            tracker: Rc::new(RefCell::new(Tracker::default())),
         }
+    }
+}
+
+#[derive(Clone, PartialEq, Eq)]
+struct Tracker<T: Clone + Eq> {
+    nodes: Vec<Node<T>>,
+}
+impl<T: Clone + Eq> Default for Tracker<T> {
+    fn default() -> Self {
+        Self { nodes: Vec::new() }
     }
 }
 
 // We wrap the smart pointers for shared ownership and interior mutability
 // in this type to hide them as implementation details.
-#[derive(Clone, PartialEq, Eq, PartialOrd)]
-pub struct Node<T>(Rc<RefCell<RawNode<T>>>);
+#[derive(Clone, PartialEq, Eq)]
+pub struct Node<T: Clone + Eq>(Rc<RefCell<RawNode<T>>>);
 
 impl<T: Clone + Eq> Node<T> {
     pub fn new(value: T) -> Self {
@@ -58,7 +79,11 @@ impl<T: Clone + Eq> Node<T> {
     pub fn neighbors(&self) -> impl Iterator<Item = Self> {
         // // TODO (can't use todo macro with this return type)
         // [].into_iter()
-        let v = RefCell::borrow(&self.0).neighbors.to_vec();
+        let v = RefCell::borrow(&self.0)
+            .neighbors
+            .iter()
+            .map(WeakNode::upgrade)
+            .collect::<Vec<_>>();
         v.into_iter()
     }
 
@@ -70,24 +95,38 @@ impl<T: Clone + Eq> Node<T> {
     }
 
     pub fn add_neighbor(&self, neighbor: Self) {
+        let contains = |v: &[WeakNode<T>], neighbor| v.iter().any(|n| &n.upgrade() == neighbor);
         {
             let v = &mut RefCell::borrow_mut(&self.0).neighbors;
-            if !v.contains(&neighbor) {
-                v.push(neighbor.clone());
+            if !contains(v, &neighbor) {
+                v.push(neighbor.downgrade());
             }
         }
         let v = &mut RefCell::borrow_mut(&neighbor.0).neighbors;
-        if !v.contains(self) {
-            v.push(self.clone());
+        if !contains(v, self) {
+            v.push(self.downgrade());
         }
     }
 
     pub fn remove_neighbor(&self, neighbor: Self) {
         {
             let v = &mut RefCell::borrow_mut(&self.0).neighbors;
-            v.retain(|elem| elem != &neighbor);
+            v.retain(|elem| elem.upgrade() != neighbor);
         }
         let v = &mut RefCell::borrow_mut(&neighbor.0).neighbors;
-        v.retain(|elem| elem != self);
+        v.retain(|elem| elem.upgrade() != *self);
+    }
+
+    fn downgrade(&self) -> WeakNode<T> {
+        WeakNode(Rc::downgrade(&self.0))
+    }
+}
+
+#[derive(Clone)]
+pub struct WeakNode<T: Clone + Eq>(Weak<RefCell<RawNode<T>>>);
+
+impl<T: Clone + Eq> WeakNode<T> {
+    fn upgrade(&self) -> Node<T> {
+        Node(Weak::upgrade(&self.0).expect("reachable neighbors should not have been dropped"))
     }
 }
